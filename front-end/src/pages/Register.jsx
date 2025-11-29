@@ -1,57 +1,104 @@
 import { useState } from "react";
-import authApi from "../api/authApi";
+import { useNavigate, Link } from "react-router-dom";
+import AuthLayout from "../components/AuthLayout";
 
 export default function Register() {
-  const [email, setEmail] = useState("test@example.com");
-  const [password, setPassword] = useState("12345678");
-  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setMessage("");
+    setError("");
 
-    try {
-      await authApi.register({ email, password });
-      setMessage("Register berhasil! Silakan login.");
-    } catch (err) {
-      console.error(err);
-      setMessage(
-        err.response?.data?.message || "Register gagal, cek console."
-      );
+    if (!email.includes("@")) {
+      setError("Email tidak valid.");
+      return;
     }
+
+    if (password.length < 6) {
+      setError("Password minimal 6 karakter.");
+      return;
+    }
+
+    // dummy register
+    localStorage.setItem("token", "dummy-token-from-register");
+    localStorage.setItem(
+      "user",
+      JSON.stringify({
+        email,
+        name: "User NutriPath",
+      })
+    );
+
+    navigate("/dashboard");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-xl shadow-md space-y-4 w-full max-w-sm"
-      >
-        <h1 className="text-xl font-semibold text-center">Register NutriPath</h1>
+    <AuthLayout
+      title="Register"
+      description="Buat akun untuk menyimpan diet plan dan progress kesehatan kamu."
+      bottom={
+        <>
+          Sudah punya akun?{" "}
+          <Link
+            to="/login"
+            className="text-emerald-600 font-semibold hover:underline"
+          >
+            Kembali ke login
+          </Link>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">
+            Email
+          </label>
+          <input
+            type="email"
+            className="w-full px-3 py-2.5 rounded-lg border border-slate-300
+                       text-sm text-slate-800
+                       focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
+                       placeholder:text-slate-400"
+            placeholder="email@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-        <input
-          className="border rounded w-full px-3 py-2 text-sm"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">
+            Password
+          </label>
+          <input
+            type="password"
+            className="w-full px-3 py-2.5 rounded-lg border border-slate-300
+                       text-sm text-slate-800
+                       focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
+                       placeholder:text-slate-400"
+            placeholder="Minimal 6 karakter"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
 
-        <input
-          className="border rounded w-full px-3 py-2 text-sm"
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        {error && (
+          <p className="text-xs text-red-500">
+            {error}
+          </p>
+        )}
 
-        <button className="bg-green-500 text-white w-full py-2 rounded">
+        <button
+          type="submit"
+          className="w-full inline-flex items-center justify-center px-4 py-2.5
+                     rounded-lg bg-emerald-600 text-white text-sm font-semibold
+                     hover:bg-emerald-700 transition"
+        >
           Register
         </button>
-
-        {message && (
-          <p className="text-center text-sm mt-2">{message}</p>
-        )}
       </form>
-    </div>
+    </AuthLayout>
   );
 }

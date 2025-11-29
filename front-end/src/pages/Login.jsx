@@ -1,108 +1,103 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-// import authApi from "../api/authApi"; // sementara nggak dipakai dulu
+import { useNavigate, Link } from "react-router-dom";
+import AuthLayout from "../components/AuthLayout";
 
 export default function Login() {
-  const [email, setEmail] = useState("test@example.com");
-  const [password, setPassword] = useState("12345678");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [email, setEmail] = useState("test@example.com");
+  const [password, setPassword] = useState("password123");
+  const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
 
-    // === SEMENTARA: fake login biar bisa lanjut ke Dashboard ===
-    // TODO: nanti kalau backend sudah siap, hapus blok ini
-    // dan aktifkan kode try/catch di bawah.
-    localStorage.setItem("token", "dummy-token");
-    navigate("/dashboard");
-    return;
-
-    /*
-    // KODE ASLI (pakai API beneran)
-    try {
-      const res = await authApi.login({ email, password });
-      const token = res.data.token;
-      localStorage.setItem("token", token);
-      navigate("/dashboard");
-    } catch (err) {
-      console.error(err);
-      setError(
-        err.response?.data?.message || "Login gagal, cek email/password."
-      );
+    if (!email.includes("@")) {
+      setError("Email tidak valid.");
+      return;
     }
-    */
+    if (!password) {
+      setError("Password tidak boleh kosong.");
+      return;
+    }
+
+    // dummy login
+    localStorage.setItem("token", "dummy-token-from-login");
+    localStorage.setItem(
+      "user",
+      JSON.stringify({ email, name: "User NutriPath" })
+    );
+
+    navigate("/dashboard");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100">
-      <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row">
-        {/* Left section: title / branding */}
-        <div className="md:w-1/2 bg-slate-900 text-white p-8 flex flex-col justify-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-3">
-            Login NutriPath
-          </h1>
-          <p className="text-sm md:text-base text-slate-200">
-            Masuk untuk melihat diet plan, progress, dan risiko kesehatan yang
-            sudah dipersonalisasi.
+    <AuthLayout
+      title="Login"
+      description="Masuk untuk melihat diet plan, progress, dan risiko kesehatan yang sudah dipersonalisasi."
+      bottom={
+        <>
+          Belum punya akun?{" "}
+          <Link
+            to="/register"
+            className="text-emerald-600 font-semibold hover:underline"
+          >
+            Register di sini
+          </Link>
+          <p className="mt-2 text-xs text-slate-500">
+            (Sementara login dummy, nanti dihubungkan ke backend.)
           </p>
+        </>
+      }
+    >
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">
+            Email
+          </label>
+          <input
+            type="email"
+            className="w-full px-3 py-2.5 rounded-lg border border-slate-300
+                       text-sm text-slate-800
+                       focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
+                       placeholder:text-slate-400"
+            placeholder="email@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
 
-        {/* Right section: form */}
-        <div className="md:w-1/2 p-8 flex items-center">
-          <form onSubmit={handleSubmit} className="w-full space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
-              <input
-                className="border rounded-lg w-full px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/60"
-                placeholder="email@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Password
-              </label>
-              <input
-                className="border rounded-lg w-full px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/60"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-slate-900 text-white py-2.5 rounded-lg font-medium hover:bg-slate-800 transition"
-            >
-              Login
-            </button>
-
-            <p className="text-xs text-center text-slate-500 mt-2">
-                Belum punya akun?{" "}
-                <span
-                    className="text-slate-900 font-medium cursor-pointer"
-                    onClick={() => navigate("/register")}
-  >
-                    Register di sini
-                </span>
-            </p>
-
-
-            {error && (
-              <p className="text-center text-sm text-red-500 mt-2">{error}</p>
-            )}
-
-            <p className="text-xs text-center text-slate-500 mt-2">
-              (Sementara login dummy, nanti dihubungkan ke backend.)
-            </p>
-          </form>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">
+            Password
+          </label>
+          <input
+            type="password"
+            className="w-full px-3 py-2.5 rounded-lg border border-slate-300
+                       text-sm text-slate-800
+                       focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
+                       placeholder:text-slate-400"
+            placeholder="••••••••"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
-      </div>
-    </div>
+
+        {error && (
+          <p className="text-xs text-red-500">
+            {error}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          className="w-full inline-flex items-center justify-center px-4 py-2.5
+                     rounded-lg bg-emerald-600 text-white text-sm font-semibold
+                     hover:bg-emerald-700 transition"
+        >
+          Login
+        </button>
+      </form>
+    </AuthLayout>
   );
 }
