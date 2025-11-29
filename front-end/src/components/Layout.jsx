@@ -11,53 +11,62 @@ export default function Layout() {
   };
 
   return (
-    <div className="app-layout bg-slate-100">
-      {/* Sidebar kiri */}
-      <aside className="sidebar">
-        <div className="logo">NutriPath</div>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "220px 1fr",
+        minHeight: "100vh",
+      }}
+    >
+      {/* SIDEBAR */}
+      <aside
+        style={{
+          padding: "1.5rem",
+          borderRight: "1px solid #eee",
+          background: "#f9fafb",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "1.4rem",
+            fontWeight: 700,
+            marginBottom: "1.5rem",
+          }}
+        >
+          NutriPath
+        </div>
 
-        <nav className="nav">
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              "nav-link" + (isActive ? " active" : "")
-            }
-          >
-            Dashboard
-          </NavLink>
-          <NavLink
-            to="/profile"
-            className={({ isActive }) =>
-              "nav-link" + (isActive ? " active" : "")
-            }
-          >
-            Profile
-          </NavLink>
-          <NavLink
-            to="/diet-plans"
-            className={({ isActive }) =>
-              "nav-link" + (isActive ? " active" : "")
-            }
-          >
-            Diet Plans
-          </NavLink>
-          <NavLink
-            to="/progress"
-            className={({ isActive }) =>
-              "nav-link" + (isActive ? " active" : "")
-            }
-          >
-            Progress
-          </NavLink>
+        <nav
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.5rem",
+            marginBottom: "2rem",
+          }}
+        >
+          <NavLink to="/dashboard">Dashboard</NavLink>
+          <NavLink to="/profile">Profile</NavLink>
+          <NavLink to="/diet-plans">Diet Plans</NavLink>
+          <NavLink to="/progress">Progress</NavLink>
         </nav>
 
-        <button className="logout-btn" onClick={handleLogout}>
+        <button
+          onClick={handleLogout}
+          style={{
+            marginTop: "auto",
+            padding: "0.4rem 0.8rem",
+            borderRadius: "0.4rem",
+            border: "1px solid #ddd",
+            background: "#fff",
+            cursor: "pointer",
+          }}
+        >
           Logout
         </button>
       </aside>
 
-      {/* Area konten kanan */}
-      <main className="main-content">
+      {/* KONTEN KANAN */}
+      <main style={{ padding: "2rem" }}>
         <Outlet />
       </main>
     </div>

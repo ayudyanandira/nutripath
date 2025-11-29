@@ -3,6 +3,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import Profile from "./pages/Profile.jsx";
+import DietPlans from "./pages/DietPlans.jsx";
+import Progress from "./pages/Progress.jsx";
+import DashboardLayout from "./components/DashboardLayout.jsx";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem("token");
@@ -13,26 +17,57 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Halaman login */}
+        {/* PUBLIC */}
         <Route path="/login" element={<Login />} />
-
-        {/* Halaman register */}
         <Route path="/register" element={<Register />} />
 
-        {/* Halaman dashboard (protected) */}
+        {/* PROTECTED + LAYOUT SIDEBAR */}
         <Route
           path="/dashboard"
           element={
             <PrivateRoute>
-              <Dashboard />
+              <DashboardLayout>
+                <Dashboard />
+              </DashboardLayout>
             </PrivateRoute>
           }
         />
 
-        {/* Root diarahkan ke login */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <DashboardLayout>
+                <Profile />
+              </DashboardLayout>
+            </PrivateRoute>
+          }
+        />
 
-        {/* Fallback: path lain juga ke login */}
+        <Route
+          path="/diet-plans"
+          element={
+            <PrivateRoute>
+              <DashboardLayout>
+                <DietPlans />
+              </DashboardLayout>
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/progress"
+          element={
+            <PrivateRoute>
+              <DashboardLayout>
+                <Progress />
+              </DashboardLayout>
+            </PrivateRoute>
+          }
+        />
+
+        {/* ROOT & FALLBACK */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>

@@ -1,14 +1,17 @@
+// src/pages/Login.jsx
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
+import { loginApi } from "../api/authApi";
 
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("test@example.com");
   const [password, setPassword] = useState("password123");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -21,14 +24,28 @@ export default function Login() {
       return;
     }
 
-    // dummy login
-    localStorage.setItem("token", "dummy-token-from-login");
-    localStorage.setItem(
-      "user",
-      JSON.stringify({ email, name: "User NutriPath" })
-    );
+    try {
+      setLoading(true);
 
-    navigate("/dashboard");
+      // panggil API (sekarang masih dummy di authApi.js)
+      const result = await loginApi({ email, password });
+
+      // simpan token & user di localStorage
+      if (result?.token) {
+        localStorage.setItem("token", result.token);
+      }
+      if (result?.user) {
+        localStorage.setItem("user", JSON.stringify(result.user));
+      }
+
+      // arahkan ke dashboard
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Login gagal. Coba lagi nanti.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,7 +62,8 @@ export default function Login() {
             Register di sini
           </Link>
           <p className="mt-2 text-xs text-slate-500">
-            (Sementara login dummy, nanti dihubungkan ke backend.)
+            (Untuk sekarang masih pakai login dummy lewat authApi, nanti
+            disambungkan ke backend beneran.)
           </p>
         </>
       }
@@ -83,19 +101,16 @@ export default function Login() {
           />
         </div>
 
-        {error && (
-          <p className="text-xs text-red-500">
-            {error}
-          </p>
-        )}
+        {error && <p className="text-xs text-red-500">{error}</p>}
 
         <button
           type="submit"
+          disabled={loading}
           className="w-full inline-flex items-center justify-center px-4 py-2.5
                      rounded-lg bg-emerald-600 text-white text-sm font-semibold
-                     hover:bg-emerald-700 transition"
+                     hover:bg-emerald-700 transition disabled:opacity-60"
         >
-          Login
+          {loading ? "Memproses..." : "Login"}
         </button>
       </form>
     </AuthLayout>

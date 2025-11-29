@@ -1,14 +1,17 @@
+// src/pages/Register.jsx
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import AuthLayout from "../components/AuthLayout";
+import { registerApi } from "../api/authApi";
 
 export default function Register() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -22,17 +25,20 @@ export default function Register() {
       return;
     }
 
-    // dummy register
-    localStorage.setItem("token", "dummy-token-from-register");
-    localStorage.setItem(
-      "user",
-      JSON.stringify({
-        email,
-        name: "User NutriPath",
-      })
-    );
+    try {
+      setLoading(true);
 
-    navigate("/dashboard");
+      // panggil API (sementara masih dummy di authApi.js)
+      await registerApi({ email, password });
+
+      // selesai register → arahkan ke login
+      navigate("/login");
+    } catch (err) {
+      console.error("Register error:", err);
+      setError("Register gagal. Coba lagi nanti.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -84,19 +90,16 @@ export default function Register() {
           />
         </div>
 
-        {error && (
-          <p className="text-xs text-red-500">
-            {error}
-          </p>
-        )}
+        {error && <p className="text-xs text-red-500">{error}</p>}
 
         <button
           type="submit"
+          disabled={loading}
           className="w-full inline-flex items-center justify-center px-4 py-2.5
                      rounded-lg bg-emerald-600 text-white text-sm font-semibold
-                     hover:bg-emerald-700 transition"
+                     hover:bg-emerald-700 transition disabled:opacity-60"
         >
-          Register
+          {loading ? "Memproses..." : "Register"}
         </button>
       </form>
     </AuthLayout>
