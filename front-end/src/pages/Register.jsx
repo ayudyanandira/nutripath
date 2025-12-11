@@ -6,14 +6,22 @@ import { registerApi } from "../api/authApi";
 
 export default function Register() {
   const navigate = useNavigate();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+
+    // Validasi sederhana di frontend
+    if (!name.trim()) {
+      setError("Nama tidak boleh kosong.");
+      return;
+    }
 
     if (!email.includes("@")) {
       setError("Email tidak valid.");
@@ -25,17 +33,24 @@ export default function Register() {
       return;
     }
 
+    if (password !== confirmPassword) {
+      setError("Konfirmasi password tidak sama.");
+      return;
+    }
+
     try {
       setLoading(true);
 
-      // panggil API (sementara masih dummy di authApi.js)
-      await registerApi({ email, password });
+      // panggil API register
+      // catatan: kalau backend kamu belum terima 'name',
+      // nilai ini bisa saja diabaikan di server.
+      await registerApi({ name, email, password });
 
       // selesai register → arahkan ke login
       navigate("/login");
     } catch (err) {
       console.error("Register error:", err);
-      setError("Register gagal. Coba lagi nanti.");
+      setError(err.message || "Register gagal. Coba lagi nanti.");
     } finally {
       setLoading(false);
     }
@@ -57,14 +72,32 @@ export default function Register() {
         </>
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Nama */}
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">
+            Nama lengkap
+          </label>
+          <input
+            type="text"
+            className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300
+                       text-sm text-slate-800
+                       focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
+                       placeholder:text-slate-400"
+            placeholder="Nama sesuai profil kesehatan"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+
+        {/* Email */}
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">
             Email
           </label>
           <input
             type="email"
-            className="w-full px-3 py-2.5 rounded-lg border border-slate-300
+            className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300
                        text-sm text-slate-800
                        focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
                        placeholder:text-slate-400"
@@ -74,13 +107,14 @@ export default function Register() {
           />
         </div>
 
+        {/* Password */}
         <div>
           <label className="block text-sm font-medium text-slate-700 mb-1">
             Password
           </label>
           <input
             type="password"
-            className="w-full px-3 py-2.5 rounded-lg border border-slate-300
+            className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300
                        text-sm text-slate-800
                        focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
                        placeholder:text-slate-400"
@@ -90,8 +124,27 @@ export default function Register() {
           />
         </div>
 
+        {/* Konfirmasi Password */}
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1">
+            Konfirmasi password
+          </label>
+          <input
+            type="password"
+            className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300
+                       text-sm text-slate-800
+                       focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500
+                       placeholder:text-slate-400"
+            placeholder="Ulangi password di atas"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+        </div>
+
+        {/* Error message */}
         {error && <p className="text-xs text-red-500">{error}</p>}
 
+        {/* Tombol submit */}
         <button
           type="submit"
           disabled={loading}

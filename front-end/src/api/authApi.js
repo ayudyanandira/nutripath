@@ -1,36 +1,66 @@
 // src/api/authApi.js
-import httpClient from "./httpClient";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 
-// SEKARANG MASIH DUMMY.
-// Nanti kalau backend sudah jadi: tinggal uncomment bagian axios,
-// dan hapus bagian return Promise.resolve(...)
+// helper untuk handle response error
+async function handleResponse(res) {
+  let data = null;
+  try {
+    data = await res.json();
+  } catch (e) {
+    // kalau tidak ada JSON, biarkan data = null
+  }
 
-export async function loginApi({ email, password }) {
-  // === versi kalau backend sudah siap ===
-  // const res = await httpClient.post("/auth/login", { email, password });
-  // return res.data; // misal: { token, user }
+  if (!res.ok) {
+    const message =
+      data?.message ||
+      data?.error ||
+      `Request failed with status ${res.status}`;
+    const error = new Error(message);
+    error.status = res.status;
+    throw error;
+  }
 
-  console.log("loginApi dummy:", { email, password });
-
-  // dummy response
-  return Promise.resolve({
-    token: "dummy-token-from-api",
-    user: {
-      name: "Ayudya",
-      email,
-    },
-  });
+  return data;
 }
 
-export async function registerApi({ email, password }) {
-  // === versi kalau backend sudah siap ===
-  // const res = await httpClient.post("/auth/register", { email, password });
-  // return res.data;
-
-  console.log("registerApi dummy:", { email, password });
-
-  // dummy response
-  return Promise.resolve({
-    success: true,
+// LOGIN
+export async function loginApi({ email, password }) {
+  const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+    credentials: "include", // aman kalau nanti pakai cookie
   });
+
+  const data = await handleResponse(res);
+
+  // Backend sekarang hanya kirim { token }
+  // Supaya frontend tetap enak, kita bungkus jadi { token, user }
+  return {
+    token: data.token,
+    user: {
+      email,
+      // kalau nanti backend kirim role / name, tinggal tambahin di sini:
+      // name: data.name,
+      // role: data.role,
+    },
+  };
+}
+
+// REGISTER
+export async function registerApi({ email, password, name }) {
+  const res = await fetch(`${API_BASE_URL}/api/auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // kalau backend belum pakai "name", tidak masalah: field ini akan diabaikan
+    body: JSON.stringify({ email, password, name }),
+  });
+
+  const data = await handleResponse(res);
+  return data;
 }
