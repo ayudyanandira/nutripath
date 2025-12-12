@@ -6,8 +6,8 @@ import { loginApi } from "../api/authApi";
 
 export default function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("test@example.com");
-  const [password, setPassword] = useState("password123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -27,22 +27,27 @@ export default function Login() {
     try {
       setLoading(true);
 
-      // panggil API (sekarang masih dummy di authApi.js)
       const result = await loginApi({ email, password });
 
-      // simpan token & user di localStorage
-      if (result?.token) {
-        localStorage.setItem("token", result.token);
-      }
-      if (result?.user) {
-        localStorage.setItem("user", JSON.stringify(result.user));
+      // backend harus kirim:
+      // { success: true, token, user }
+      if (!result.token) {
+        setError("Token tidak ditemukan. Login gagal.");
+        return;
       }
 
-      // arahkan ke dashboard
+      localStorage.setItem("token", result.token);
+      localStorage.setItem("user", JSON.stringify(result.user));
+
       navigate("/dashboard");
     } catch (err) {
       console.error("Login error:", err);
-      setError("Login gagal. Coba lagi nanti.");
+
+      if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Login gagal. Coba lagi.");
+      }
     } finally {
       setLoading(false);
     }
@@ -51,7 +56,7 @@ export default function Login() {
   return (
     <AuthLayout
       title="Login"
-      description="Masuk untuk melihat diet plan, progress, dan risiko kesehatan yang sudah dipersonalisasi."
+      description="Masuk untuk mengakses dashboard nutrisi dan progress harian."
       bottom={
         <>
           Belum punya akun?{" "}
@@ -61,10 +66,6 @@ export default function Login() {
           >
             Register di sini
           </Link>
-          <p className="mt-2 text-xs text-slate-500">
-            (Untuk sekarang masih pakai login dummy lewat authApi, nanti
-            disambungkan ke backend beneran.)
-          </p>
         </>
       }
     >

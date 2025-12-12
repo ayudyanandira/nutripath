@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "http://localhost:4000/api", // backend kamu
+  baseURL: "http://localhost:4000/api", // backend kamu apa gwe?
 });
 
 axiosClient.interceptors.request.use((config) => {
