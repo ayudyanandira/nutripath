@@ -1,4 +1,4 @@
-const pool = require('./src/models/db');
+const pool = require('./models/db');
 const bcrypt = require('bcrypt');
 const CryptoJS = require('crypto-js');
 require('dotenv').config();

@@ -1,4 +1,5 @@
-const pool = require('./src/models/db');
+const path = require("path");
+const pool = require(path.join(__dirname, "models", "db"));
 
 async function migrate() {
     try {
