@@ -54,25 +54,27 @@ export default function Dashboard() {
   return (
     <div className="max-w-6xl mx-auto py-6 space-y-6">
       {/* Header atas */}
-      <header className="flex items-start justify-between mb-2">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">NutriPath</h1>
-          <p className="text-sm text-slate-600">
-            Personalized nutrition dashboard
-          </p>
-        </div>
-        <div className="text-right text-sm">
-          <p className="font-semibold text-slate-800">{dummyProfile.name}</p>
-          <p className="text-xs text-slate-500">
-            Plan: {dummyProfile.planStatus}
-          </p>
+      <header className="mb-6 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white p-6 rounded-2xl shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm opacity-80">Welcome back,</p>
+            <h1 className="text-3xl font-bold">{dummyProfile.name} 👋</h1>
+            <p className="text-xs opacity-70 mt-1">
+              Personalized dashboard for your nutrition journey
+            </p>
+          </div>
+
+          {/* Avatar circle */}
+          <div className="w-14 h-14 bg-white/30 rounded-full flex items-center justify-center text-xl font-bold backdrop-blur">
+            A
+          </div>
         </div>
       </header>
 
       {/* Row 1: Profile + Summary + Upgrade */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Profile card */}
-        <div className="bg-white rounded-xl shadow-sm p-5 space-y-3 md:col-span-1">
+        <div className="bg-white rounded-2xl shadow-md p-6 border border-slate-100 space-y-3 md:col-span-1 transition duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-200/40">
           <h2 className="text-base font-semibold text-slate-900">
             Profile Overview
           </h2>
@@ -102,7 +104,7 @@ export default function Dashboard() {
         </div>
 
         {/* Today summary */}
-        <div className="bg-white rounded-xl shadow-sm p-5 space-y-3 md:col-span-1">
+        <div className="bg-white rounded-2xl shadow-md p-6 border border-slate-100 space-y-3 md:col-span-1 transition duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-200/40">
           <h2 className="text-base font-semibold text-slate-900">
             Today&apos;s Summary
           </h2>
@@ -128,11 +130,11 @@ export default function Dashboard() {
               </span>
               <span>{caloriesPercent}%</span>
             </div>
-            <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+            <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
               <div
-                className="h-2 rounded-full bg-amber-500"
                 style={{ width: `${caloriesPercent}%` }}
-              />
+                className="h-full bg-gradient-to-r from-amber-400 to-amber-600 rounded-full transition-all"
+              ></div>
             </div>
 
             {/* Steps bar */}
@@ -145,7 +147,7 @@ export default function Dashboard() {
             </div>
             <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
               <div
-                className="h-2 rounded-full bg-sky-500"
+                className="h-2 rounded-full bg-gradient-to-r from-sky-400 to-sky-600"
                 style={{ width: `${stepsPercent}%` }}
               />
             </div>
@@ -153,7 +155,7 @@ export default function Dashboard() {
         </div>
 
         {/* Upgrade card */}
-        <div className="bg-slate-900 text-white rounded-xl shadow-sm p-5 flex flex-col justify-between md:col-span-1">
+        <div className="bg-gradient-to-br from-emerald-500 to-emerald-700 text-white rounded-2xl shadow-lg p-6 border border-slate-100 flex flex-col justify-between md:col-span-1 transition duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-200/40">
           <div>
             <h2 className="text-base font-semibold mb-2">Upgrade Your Plan</h2>
             <p className="text-sm text-slate-200">
@@ -170,7 +172,7 @@ export default function Dashboard() {
       {/* Row 2: Diet plan + quick progress form */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Diet plan list */}
-        <div className="md:col-span-2 bg-white rounded-xl shadow-sm p-5">
+        <div className="md:col-span-2 bg-white rounded-2xl shadow-md p-6 border border-slate-100 transition duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-200/40">
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-base font-semibold text-slate-900">
               Today&apos;s Diet Plan
@@ -184,24 +186,22 @@ export default function Dashboard() {
             {dummyDietToday.map((item) => (
               <div
                 key={item.time}
-                className="flex items-start justify-between py-3"
+                className="flex justify-between items-center p-3 mb-2 rounded-xl 50 hover bg-gradient-to-r from-emerald-50 to-emerald-100/60 hover:from-emerald-100 hover:to-emerald-200 transition duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-200/40"
               >
                 <div>
-                  <p className="text-sm font-semibold text-slate-800">
-                    {item.time}
-                  </p>
+                  <p className="font-semibold text-slate-800">{item.time}</p>
                   <p className="text-sm text-slate-600">{item.menu}</p>
                 </div>
-                <p className="text-sm font-medium text-slate-700">
+                <span className="text-sm font-semibold text-slate-700">
                   {item.calories} kcal
-                </p>
+                </span>
               </div>
             ))}
           </div>
         </div>
 
         {/* Quick progress note */}
-        <div className="bg-white rounded-xl shadow-sm p-5 space-y-3">
+        <div className="bg-white rounded-2xl shadow-md p-6 border border-slate-100 space-y-3 transition duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-200/40">
           <h2 className="text-base font-semibold text-slate-900">
             Quick Progress Note
           </h2>
@@ -217,7 +217,7 @@ export default function Dashboard() {
             className="border rounded-lg w-full px-3 py-2 text-sm"
             placeholder="Langkah (mis. 5000)"
           />
-          <button className="w-full bg-slate-900 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-slate-800">
+          <button className="w-full bg-emerald-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-slate-800">
             Simpan progress (dummy)
           </button>
         </div>
