@@ -1,66 +1,16 @@
 // src/components/DashboardLayout.jsx
-import { NavLink, useNavigate } from "react-router-dom";
+import Sidebar from "./Sidebar";
 
 export default function DashboardLayout({ children }) {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
-
   return (
-    <div className="app-layout">
-      {/* SIDEBAR */}
-      <aside className="sidebar">
-        <div className="logo">NutriPath</div>
+    <div className="flex min-h-screen bg-gradient-to-br from-emerald-50 via-white to-sky-50">
+      {/* Sidebar */}
+      <Sidebar />
 
-        <nav className="nav">
-          <NavLink
-            to="/dashboard"
-            className={({ isActive }) =>
-              "nav-link" + (isActive ? " active" : "")
-            }
-          >
-            Dashboard
-          </NavLink>
-
-          <NavLink
-            to="/profile"
-            className={({ isActive }) =>
-              "nav-link" + (isActive ? " active" : "")
-            }
-          >
-            Profile
-          </NavLink>
-
-          <NavLink
-            to="/diet-plans"
-            className={({ isActive }) =>
-              "nav-link" + (isActive ? " active" : "")
-            }
-          >
-            Diet Plans
-          </NavLink>
-
-          <NavLink
-            to="/progress"
-            className={({ isActive }) =>
-              "nav-link" + (isActive ? " active" : "")
-            }
-          >
-            Progress
-          </NavLink>
-        </nav>
-
-        <button className="logout-btn" onClick={handleLogout}>
-          Logout
-        </button>
-      </aside>
-
-      {/* KONTEN KANAN */}
-      <main className="main-content">{children}</main>
+      {/* Main content */}
+      <main className="flex-1 px-6 py-6 overflow-y-auto">
+        {children}
+      </main>
     </div>
   );
 }
