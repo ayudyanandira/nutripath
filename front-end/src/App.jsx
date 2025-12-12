@@ -1,11 +1,14 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Profile from "./pages/Profile.jsx";
 import DietPlans from "./pages/DietPlans.jsx";
 import Progress from "./pages/Progress.jsx";
+import GoPremium from "./pages/GoPremium.jsx";
+
 import DashboardLayout from "./components/DashboardLayout.jsx";
 
 function PrivateRoute({ children }) {
@@ -66,9 +69,20 @@ export default function App() {
           }
         />
 
+        <Route
+          path="/go-premium"
+          element={
+            <PrivateRoute>
+              <DashboardLayout>
+                <GoPremium />
+              </DashboardLayout>
+            </PrivateRoute>
+          }
+        />
+
         {/* ROOT & FALLBACK */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>
   );

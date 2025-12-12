@@ -2,12 +2,15 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
+// src/components/Sidebar.jsx
 const navItems = [
   { to: "/dashboard", label: "Dashboard" },
   { to: "/profile", label: "Profile" },
   { to: "/diet-plans", label: "Diet Plans" },
   { to: "/progress", label: "Progress" },
+  { to: "/go-premium", label: "Go Premium" }, // tambah ini
 ];
+
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -56,6 +59,8 @@ export default function Sidebar() {
               </NavLink>
             ))}
           </nav>
+
+          
 
           {/* Footer / logout */}
           <div className="px-3 pb-4 pt-2 border-t border-slate-100">
