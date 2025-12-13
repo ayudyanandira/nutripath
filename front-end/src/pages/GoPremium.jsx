@@ -2,6 +2,8 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
+import { connectWallet } from "../utils/metamask";
+
 
 /**
  * UI-only (dummy).
@@ -417,13 +419,50 @@ export default function GoPremium() {
 
               <button
                 type="button"
-                onClick={() =>
-                  alert("Nanti tombol ini akan memulai proses pembayaran (dummy).")
-                }
+                onClick={async () => {
+                  try {
+                    const walletAddress = await connectWallet();
+                    if (!walletAddress) return;
+
+                    const token = localStorage.getItem("token");
+
+                    const res = await fetch(
+                      "http://localhost:4000/api/payments/upgrade",
+                      {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                          Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ walletAddress }),
+                      }
+                    );
+                    
+
+                    const data = await res.json();
+
+                    if (data.success) {
+                      // update localStorage
+                      localStorage.setItem(
+                        "user",
+                        JSON.stringify({ plan: "Premium" })
+                      );
+
+                      alert("Upgrade berhasil 🎉");
+                      window.location.reload();
+                    } else {
+                      alert("Upgrade gagal");
+                    }
+                  } catch (e) {
+                    console.error(e);
+                    alert("Error saat upgrade");
+                  }
+                }}
                 className="w-full rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
               >
-                Lanjut upgrade (dummy)
+                Lanjut upgrade
               </button>
+
 
               <button
                 type="button"

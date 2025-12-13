@@ -3,21 +3,29 @@ const path = require("path");
 require("dotenv").config();
 const { ethers } = require("ethers");
 
-// path ABI
+// ABI
 const abiPath = path.join(__dirname, "../abi/PaymentAudit.json");
+const ABI = JSON.parse(fs.readFileSync(abiPath, "utf8")).abi;
 
-// baca ABI
-const contractJson = JSON.parse(fs.readFileSync(abiPath, "utf8"));
-const ABI = contractJson.abi;
+function getContract() {
+  if (!process.env.SEPOLIA_RPC_URL) {
+    throw new Error("SEPOLIA_RPC_URL is undefined");
+  }
+  if (!process.env.ADMIN_PRIVATE_KEY) {
+    throw new Error("ADMIN_PRIVATE_KEY is undefined");
+  }
+  if (!process.env.CONTRACT_ADDRESS) {
+    throw new Error("CONTRACT_ADDRESS is undefined");
+  }
 
-// alamat kontrak
-const CONTRACT_ADDRESS = process.env.CONTRACT_ADDRESS;
+  const provider = new ethers.JsonRpcProvider(process.env.SEPOLIA_RPC_URL);
+  const wallet = new ethers.Wallet(process.env.ADMIN_PRIVATE_KEY, provider);
 
-// provider + wallet
-const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
-const wallet = new ethers.Wallet(process.env.ADMIN_PRIVATE_KEY, provider);
+  return new ethers.Contract(
+    process.env.CONTRACT_ADDRESS,
+    ABI,
+    wallet
+  );
+}
 
-// instance contract
-const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, wallet);
-
-module.exports = contract;
+module.exports = getContract;
