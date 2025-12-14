@@ -65,6 +65,27 @@ async function migrate() {
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );`);
 
+        // daily_progress
+        await pool.query(`
+        CREATE TABLE daily_progress (
+            id SERIAL PRIMARY KEY,
+            user_id INT REFERENCES users(id) ON DELETE CASCADE,
+            date DATE DEFAULT CURRENT_DATE,
+            calories_consumed INT DEFAULT 0,
+            steps INT DEFAULT 0
+          );
+          `);
+
+        // tabel tambahan
+        // CREATE TABLE user_diet_daily (
+        //     id SERIAL PRIMARY KEY,
+        //     user_id INT REFERENCES users(id) ON DELETE CASCADE,
+        //     meal_time VARCHAR(20),
+        //     menu TEXT,
+        //     calories INT,
+        //     date DATE DEFAULT CURRENT_DATE
+        //   );
+
         console.log('✅ Migration completed!');
         process.exit(0);
     } catch (err) {

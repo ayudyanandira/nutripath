@@ -11,6 +11,7 @@ const paymentRoutes = require("./routes/payment");
 const adminRoutes = require("./routes/admin");
 const testChainRoutes = require("./routes/testChain.routes");
 const blockchainRoutes = require("./routes/blockchainRoutes");
+const dashboardRoutes = require("./routes/dashboard");
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api", testChainRoutes);
 app.use("/api/blockchain", blockchainRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 // START SERVER
 const PORT = process.env.PORT || 4000;
