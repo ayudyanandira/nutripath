@@ -1,5 +1,7 @@
 // src/pages/Dashboard.jsx
 import { useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const dummyProfile = {
   name: "Ayudya",
@@ -9,7 +11,7 @@ const dummyProfile = {
   geneticRisk: "Diabetes - Low Risk",
   // UBAH INI UNTUK TEST ROLE:
   // "Free" | "Premium"
-  planStatus: "Premium",
+  planStatus: "Free",
 };
 
 const dummyDietToday = [
@@ -50,6 +52,7 @@ export default function Dashboard() {
   const visibleDietItems = isPremium ? dummyDietToday : dummyDietToday.slice(0, 2);
   const lockedDietItems = isPremium ? [] : dummyDietToday.slice(2);
 
+  const navigate = useNavigate();
   // ---------------------------
   // VIEW: KONSUL EXPERT (UI-only)
   // ---------------------------
@@ -93,7 +96,7 @@ export default function Dashboard() {
                 Untuk akses konsultasi penuh, upgrade ke Premium.
               </p>
               <button
-                onClick={() => alert("Redirect ke halaman pembayaran (dummy)")}
+                onClick={() => navigate("/go-premium")}
                 className="mt-3 inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-white hover:bg-slate-800"
               >
                 Upgrade ke Premium
@@ -254,34 +257,44 @@ export default function Dashboard() {
   // ---------------------------
   return (
     <div className="max-w-6xl mx-auto py-6 space-y-6">
-      {/* Header atas */}
-      <header className="mb-6 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white p-6 rounded-2xl shadow-sm">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm opacity-80">Welcome back,</p>
-            <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold">{dummyProfile.name} 👋</h1>
-              <span
-                className={`text-xs font-semibold px-3 py-1 rounded-full border ${
-                  isPremium
-                    ? "bg-white/15 text-white border-white/25"
-                    : "bg-white/10 text-white border-white/20"
-                }`}
-              >
-                {isPremium ? "Premium" : "Free"}
-              </span>
-            </div>
-            <p className="text-xs opacity-70 mt-1">
-              Personalized dashboard for your nutrition journey
-            </p>
+    {/* Header atas */}
+    <motion.header
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="mb-6 bg-gradient-to-r from-emerald-500 to-emerald-700 text-white p-6 rounded-2xl shadow-sm"
+    >
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm opacity-80">Welcome back,</p>
+
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-bold">
+              {dummyProfile.name} 👋
+            </h1>
+
+            <span
+              className={`text-xs font-semibold px-3 py-1 rounded-full border ${
+                isPremium
+                  ? "bg-white/15 text-white border-white/25"
+                  : "bg-white/10 text-white border-white/20"
+              }`}
+            >
+              {isPremium ? "Premium" : "Free"}
+            </span>
           </div>
 
-          {/* Avatar circle */}
-          <div className="w-14 h-14 bg-white/30 rounded-full flex items-center justify-center text-xl font-bold backdrop-blur">
-            {dummyProfile.name?.[0]?.toUpperCase() || "U"}
-          </div>
+          <p className="text-xs opacity-70 mt-1">
+            Personalized dashboard for your nutrition journey
+          </p>
         </div>
-      </header>
+
+        {/* Avatar circle */}
+        <div className="w-14 h-14 bg-white/30 rounded-full flex items-center justify-center text-xl font-bold backdrop-blur">
+          {dummyProfile.name?.[0]?.toUpperCase() || "U"}
+        </div>
+      </div>
+    </motion.header>
 
       {/* Row 1: Profile + Summary + Plan Card */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -392,7 +405,7 @@ export default function Dashboard() {
               </p>
             </div>
             <button
-              onClick={() => alert("Redirect ke pembayaran (dummy)")}
+              onClick={() => navigate("/go-premium")}
               className="mt-4 w-full bg-white text-slate-900 py-2.5 rounded-lg text-sm font-semibold hover:bg-slate-100"
             >
               Go Premium
@@ -523,7 +536,7 @@ export default function Dashboard() {
                 ))}
 
                 <button
-                  onClick={() => alert("Upgrade untuk melihat diet plan lengkap (dummy).")}
+                  onClick={() => navigate("/go-premium")}
                   className="w-full mt-2 bg-slate-900 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-slate-800"
                 >
                   Buka rencana lengkap (Premium)

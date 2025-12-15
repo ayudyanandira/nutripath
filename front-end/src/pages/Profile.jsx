@@ -1,6 +1,7 @@
 // src/pages/Profile.jsx
 import { useMemo, useState } from "react";
 import PageHeader from "../components/PageHeader";
+import { useNavigate } from "react-router-dom";
 
 const dummyUser = {
   name: "Ayudya",
@@ -8,7 +9,7 @@ const dummyUser = {
   age: 21,
   height: 160,
   weight: 55,
-  plan: "Premium", // UBAH: "Free" | "Premium"
+  plan: "Free", // UBAH: "Free" | "Premium"
   geneticRisk: "Diabetes - Low Risk",
   lastCheckIn: "2 hari lalu",
   goals: [
@@ -49,6 +50,7 @@ export default function Profile() {
   // Dummy completeness (boleh kamu ubah)
   const profileCompleteness = isPremium ? 70 : 45;
 
+  const navigate = useNavigate();
   // -----------------------------
   // VIEW: EDIT PROFILE (UI ONLY)
   // -----------------------------
@@ -231,7 +233,7 @@ export default function Profile() {
           <button
             type="button"
             className="shrink-0 inline-flex items-center rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
-            onClick={() => alert("Go Premium page masih dikerjakan (dummy).")}
+            onClick={() => navigate("/go-premium")}
           >
             Go Premium
           </button>

@@ -1,13 +1,14 @@
 // src/pages/Progress.jsx
 import { useMemo, useState } from "react";
 import PageHeader from "../components/PageHeader";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Dummy user plan:
  * UBAH jadi "Free" untuk melihat lock Next Focus & Weekly Challenge.
  */
 const dummyUser = {
-  plan: "Premium", // "Free" | "Premium"
+  plan: "Free", // "Free" | "Premium"
 };
 
 const progressData = [
@@ -61,6 +62,8 @@ export default function Progress() {
   if (view === "challenge" && !isPremium) {
     setView("progress");
   }
+
+  const navigate = useNavigate();
 
   // -----------------------------
   // VIEW: CHALLENGE PAGE (Premium only)
@@ -272,7 +275,7 @@ export default function Progress() {
           </div>
           <button
             type="button"
-            onClick={() => alert("Go Premium page masih dikerjakan (dummy).")}
+            onClick={() => navigate("/go-premium")}
             className="shrink-0 inline-flex items-center rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
           >
             Upgrade
@@ -478,7 +481,7 @@ export default function Progress() {
                 </p>
                 <button
                   type="button"
-                  onClick={() => alert("Go Premium page masih dikerjakan (dummy).")}
+                  onClick={() => navigate("/go-premium")}
                   className="md:w-auto w-full rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
                 >
                   Upgrade untuk buka Next focus

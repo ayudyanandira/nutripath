@@ -1,6 +1,7 @@
 // src/pages/DietPlans.jsx
 import { useMemo, useState } from "react";
 import PageHeader from "../components/PageHeader";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Dummy user plan:
@@ -74,6 +75,7 @@ export default function DietPlans() {
       ? dummyPlans
       : dummyPlans.filter((p) => p.type === selectedFilter);
 
+  const navigate = useNavigate();
   // -----------------------------
   // VIEW: CONSISTENCY PAGE (UI)
   // -----------------------------
@@ -259,7 +261,7 @@ export default function DietPlans() {
           <button
             type="button"
             className="shrink-0 inline-flex items-center rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
-            onClick={() => alert("Go Premium page masih dikerjakan (dummy).")}
+            onClick={() => navigate("/go-premium")}
           >
             Upgrade
           </button>
@@ -384,8 +386,7 @@ export default function DietPlans() {
                         </div>
                         <button
                           type="button"
-                          onClick={() =>
-                            alert("Go Premium page masih dikerjakan (dummy).")
+                          onClick={() => navigate("/go-premium")
                           }
                           className="shrink-0 inline-flex items-center rounded-lg bg-slate-900 px-3 py-2 text-xs font-semibold text-white hover:bg-slate-800"
                         >
